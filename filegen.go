@@ -20,15 +20,17 @@ var (
 	loremIpsum   string
 	fileCount    int
 	fileSize     int
+	rawSize      string
 	rndSizeMin   int
+	rawRndSize   string
 	startDir     string
 	showHelp     bool
 )
 
 func init() {
-	flag.IntVar(&fileCount, "count", 1024, "file count")
-	flag.IntVar(&fileSize, "size", 1024, "file size")
-	flag.IntVar(&rndSizeMin, "random-size-min", 0, "random size mode, to enable it, set min size of file > 0")
+	flag.IntVar(&fileCount, "count", 1000, "file count")
+	flag.StringVar(&rawSize, "size", "1K", "file size")
+	flag.StringVar(&rawRndSize, "random-size-min", "", "random size mode, to enable it, set min size of file > 0")
 	flag.StringVar(&startDir, "path", "testdata", "a path for create all data")
 	flag.BoolVar(&showHelp, "h", false, "show help")
 	flag.BoolVar(&showHelp, "help", false, "show help")
@@ -110,6 +112,14 @@ func main() {
 		flag.PrintDefaults()
 		os.Exit(0)
 	}
+
+	fileSize, err := Parse(rawSize)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	rndSizeMin, _ := Parse(rawRndSize)
 
 	if rndSizeMin > 0 {
 		fmt.Printf("random file size mode is enabled,\ncreated files will have size between %d and %d bytes\n", rndSizeMin, fileSize)
