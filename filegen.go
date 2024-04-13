@@ -57,17 +57,13 @@ func genRandomString(n int, t []string) string {
 }
 
 // Create a file with the content of fileSize random chars.
-func createFile(p string) error {
+func createFile(p string, fileContent func() string) error {
 	f, err := os.Create(p)
 	defer f.Close()
 	if err != nil {
 		return err
 	}
-	content := loremIpsum
-	if rndSizeMin > 0 {
-		limit := rand.Intn(fileSize - rndSizeMin)
-		content = content[:rndSizeMin+limit]
-	}
+	content := fileContent()
 	n, err := f.WriteString(content)
 	if n != len(content) {
 		return fmt.Errorf("wrong %d bytes written", n)
@@ -119,10 +115,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	rndSizeMin, _ := Parse(rawRndSize)
+	rndSizeMin, _ = Parse(rawRndSize)
 
 	if rndSizeMin > 0 {
-		fmt.Printf("random file size mode is enabled,\ncreated files will have size between %d and %d bytes\n", rndSizeMin, fileSize)
+		if rndSizeMin < fileSize {
+			fmt.Printf("random file size mode is enabled,\ncreated files will have size between %d and %d bytes\n", rndSizeMin, fileSize)
+		} else {
+			fmt.Printf("random min file size must be greater than file size\n")
+			rndSizeMin = -1
+		}
 	}
 
 	// generate Lorem Ipsum text
@@ -165,9 +166,18 @@ func main() {
 	// start workers
 	for i := 0; i < workersCount; i++ {
 		go func() {
+			fileContent := func() string {
+				content := loremIpsum
+				if rndSizeMin > 0 {
+					limit := rand.Intn(fileSize - rndSizeMin)
+					content = content[:rndSizeMin+limit]
+				}
+				return content
+			}
+
 			for fpath := range filePathChannel {
 				defer workers.Done()
-				if err := createFile(fpath); err != nil {
+				if err := createFile(fpath, fileContent); err != nil {
 					fmt.Println(fpath, err)
 				}
 			}
