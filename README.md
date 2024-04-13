@@ -1,6 +1,4 @@
-# Introduction
-
-This is a small script for generation of files.
+# File generator
 [![goreportcard](https://goreportcard.com/badge/github.com/1buran/filegen)](https://goreportcard.com/report/github.com/1buran/filegen)
 ![Demo](https://i.imgur.com/6SeGc15.gif)
 
