@@ -1,7 +1,7 @@
 # File generator
 [![goreportcard](https://goreportcard.com/badge/github.com/1buran/filegen)](https://goreportcard.com/report/github.com/1buran/filegen)
 
-![Demo](https://i.imgur.com/6SeGc15.gif)
+![Demo](https://i.imgur.com/jvf7DuX.gif)
 
 > [!CAUTION]
 > Script is optimized to generate a lot of small text files with random chars within,
@@ -43,7 +43,7 @@ vhs demo.tape
 
 Upload to Imgur and update readme.
 ```
-url=`curl --location https://api.imgur.com/3/image \
+. .env && url=`curl --location https://api.imgur.com/3/image \
      --header "Authorization: Client-ID ${clientId}" \
      --form image=@demo.gif \
      --form type=image \
