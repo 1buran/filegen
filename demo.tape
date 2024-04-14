@@ -18,13 +18,13 @@ Type "filegen -count 100 -size 10K -path data"
 Enter
 Type "find data -type f -printf '%s %p\n' | head"
 Enter
-Sleep 3
+Sleep 1
 Type "find data -type f | wc -l"
 Enter
-Sleep 3
+Sleep 1
 Type "head -c 50 `find  data -type f | head -1`"
 Enter
-Sleep 3
+Sleep 1
 Hide
 Type "rm -rf data"
 Enter
@@ -37,22 +37,22 @@ Type "filegen -count 100 -size 1.25M \"
 Enter
 Type "-random-size-min 100K -path data"
 Enter
-Sleep 3
+Sleep 1
 Type "find data -type f -printf '%s %p\n' | head"
 Enter
-Sleep 3
+Sleep 1
 Type "find data -type f | wc -l"
 Enter
-Sleep 3
+Sleep 1
 Type "find data -type f -size +1M | wc -l"
 Enter
-Sleep 3
+Sleep 1
 Type "du -hs data"
 Enter
-Sleep 3
+Sleep 1
 Type "head -c 50 `find data -type f | head -1`"
 Enter
-Sleep 3
+Sleep 1
 Hide
 Type "rm -rf data"
 Enter

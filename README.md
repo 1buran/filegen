@@ -1,7 +1,7 @@
 # File generator
 [![goreportcard](https://goreportcard.com/badge/github.com/1buran/filegen)](https://goreportcard.com/report/github.com/1buran/filegen)
 
-![Demo](https://i.imgur.com/jvf7DuX.gif)
+![Demo](https://i.imgur.com/p5QwUzq.gif)
 
 > [!CAUTION]
 > Script is optimized to generate a lot of small text files with random chars within,

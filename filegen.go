@@ -17,11 +17,8 @@ const MAX_WORKERS = 1024
 var (
 	txtTemplate  []string
 	fileTemplate []string
-	loremIpsum   string
 	fileCount    int
-	fileSize     int
 	rawSize      string
-	rndSizeMin   int
 	rawRndSize   string
 	startDir     string
 	showHelp     bool
@@ -115,11 +112,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	rndSizeMin, _ = Parse(rawRndSize)
+	rndSizeMin, _ := Parse(rawRndSize)
 
 	if rndSizeMin > 0 {
 		if rndSizeMin < fileSize {
-			fmt.Printf("random file size mode is enabled,\ncreated files will have size between %d and %d bytes\n", rndSizeMin, fileSize)
+			fmt.Printf("Random file size mode is enabled,\ncreated files will have size from %d to %d bytes\n", rndSizeMin, fileSize)
 		} else {
 			fmt.Printf("random min file size must be greater than file size\n")
 			rndSizeMin = -1
@@ -127,7 +124,15 @@ func main() {
 	}
 
 	// generate Lorem Ipsum text
-	loremIpsum = genRandomString(fileSize, txtTemplate)
+	loremIpsum := genRandomString(fileSize, txtTemplate)
+
+	fileContent := func() string {
+		if rndSizeMin > 0 {
+			limit := rand.Intn(fileSize - rndSizeMin)
+			return loremIpsum[:rndSizeMin+limit]
+		}
+		return loremIpsum
+	}
 
 	// create a two level dirs, used square root of file count e.g.:
 	// for 10000 files will be created 100 dirs with 100 dirs inner of every dir
@@ -166,15 +171,6 @@ func main() {
 	// start workers
 	for i := 0; i < workersCount; i++ {
 		go func() {
-			fileContent := func() string {
-				content := loremIpsum
-				if rndSizeMin > 0 {
-					limit := rand.Intn(fileSize - rndSizeMin)
-					content = content[:rndSizeMin+limit]
-				}
-				return content
-			}
-
 			for fpath := range filePathChannel {
 				defer workers.Done()
 				if err := createFile(fpath, fileContent); err != nil {
